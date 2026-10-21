@@ -25,5 +25,3 @@ b'\x03\x00\x03\x01'
 b''
 b''
 ```
-
-Now, since TCP treats data as continuous streams, each line cannot always be read as a standalone message or action.
