@@ -13,8 +13,9 @@ def process_packet(packet):
 
         packet_count += 1
 
-        payload = bytes(packet[TCP].payload)
-        print(payload)
+        # Note that this is the payload according to scapy, but the full packet according to minecraft
+        raw_bytes = bytes(packet[TCP].payload)
+        print(raw_bytes)
 
 def output_packet_summary():
     print(f"\nTotal packet count: {packet_count}")
