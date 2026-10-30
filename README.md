@@ -7,6 +7,8 @@ A packet capture and analysis program for TCP client-server communication on a M
 Over the years, I used to play a certain Minecraft server (the same one for which I built the [door code brute forcer](https://github.com/jsmeya/door-code-brute-forcer)).
 My idea for this packet analyzer was initially part of that brute forcer project. I wanted to see if I could read the traffic between my client and the server to uncover how the door code system worked behind the scenes.
 
+Just like with the brute forcer project, I will not be disclosing this minecraft server in specific.
+
 ## Encryption
 
 By default (`online-mode=true`), Minecraft starts encrypting client-server communication partway through the Login state, once the key exchange completes. Everything afterward is encrypted with AES/CFB8. Building a packet sniffer for a server under this setting would require implementing a method toward decryption (such as a proxy or modded client). However, this server in specific is 'cracked,' operating in `online-mode=false`, meaning encryption is disabled. This allows for direct, raw packet inspection using Python and Scapy. Compression is still relevant, but that will be covered in a bit.
