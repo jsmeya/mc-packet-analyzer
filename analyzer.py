@@ -11,7 +11,7 @@ def process_packet(packet):
         src_ip = packet[IP].src
         dst_ip = packet[IP].dst
 
-        if dst_ip != "192.168.1.214":
+        if src_ip == "192.168.1.214":
             packet_count += 1
 
             raw_bytes = bytes(packet[TCP].payload)
