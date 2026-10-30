@@ -1,6 +1,6 @@
 # mc-packet-analyzer
 
-A packet analysis program for TCP client-server communication on a Minecraft server (under certain conditions).
+A packet capture and analysis program for TCP client-server communication on a Minecraft server (under certain conditions), built using Python and Scapy.
 
 ## Background
 
