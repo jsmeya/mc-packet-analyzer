@@ -5,7 +5,7 @@ A packet capture and analysis program for TCP client-server communication on a M
 ## Background
 
 Over the years, I used to play a certain Minecraft server (the same one for which I built the [door code brute forcer](https://github.com/jsmeya/door-code-brute-forcer)).
-My idea for this packet analyzer was initially part of that brute forcer project. I wanted to see if I could read the traffic between my client and the server to uncover how the door code system worked behind the scenes.
+My idea for this packet analyzer was initially part of that brute forcer project. I wanted to see if I could read the traffic between my client and the server to uncover how the door code system worked behind the scenes. This just led to curiosity about the entirety of what is actually being communicated between a Minecraft client and the server.
 
 Just like with the brute forcer project, I will not be disclosing this minecraft server in specific.
 
@@ -64,3 +64,12 @@ To apply this structure, take the following Minecraft packet (again):
 4. The final byte, `0x01`, represents the **packet data**. The above packet ID contains a `Boolean` field type: "*True if the client is on the ground, false otherwise*." With a value of one, this packet confirms the player is on the ground. 😎
 
 Pretty cool! :)
+
+## Next Steps
+
+Looking forward, an automated packet analysis pipeline would *heavily* streamline the packet inspection process. Extending the existing architecture, this pipeline would decode packets captured over a given interval by mapping those bytes literals to an existing database. This can be accomplished through either direct API calls to the protocol website or by constructing a static reference database. At a closer look, here's what's next on the agenda:
+* Distinguish between clientbound/serverbound packets (either input-directed or through separate sniffer threads)
+* Replace `AsyncSniffer()` with `sniff()` for storing packets AND achieving better performance
+* Identify the best approach for decoding packets
+
+That's all for now.
