@@ -1,6 +1,6 @@
 import sys
 import time
-from scapy.all import AsyncSniffer, TCP, IP
+from scapy.all import sniff, AsyncSniffer, TCP, IP
 
 packet_count = 0
 start_time = time.perf_counter()
@@ -17,6 +17,7 @@ def process_packet(packet):
             raw_bytes = bytes(packet[TCP].payload)
             print(raw_bytes)
 
+# Only when using AsyncSniffer()
 def output_packet_summary():
     print(f"\nTotal packet count: {packet_count}")
     
@@ -29,6 +30,12 @@ def output_packet_summary():
 
     return None
 
+packets = sniff(filter="tcp port 25565", prn=process_packet, store=False)
+
+# ---------------------------------
+# BELOW IS FOR ASYNCHRONOUS SNIFFING
+# ---------------------------------
+'''
 sniffer = AsyncSniffer(filter="tcp port 25565", prn=process_packet, store=False)
 sniffer.start()
 
@@ -45,3 +52,4 @@ except KeyboardInterrupt:
 
     print("\nExiting...")
     sys.exit(0)
+'''
