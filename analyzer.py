@@ -1,9 +1,7 @@
-import sys
 import time
 from scapy.all import sniff, AsyncSniffer, TCP, IP
 
 packet_count = 0
-start_time = time.perf_counter()
 
 def process_packet(packet):
     global packet_count
@@ -17,8 +15,31 @@ def process_packet(packet):
             raw_bytes = bytes(packet[TCP].payload)
             print(raw_bytes)
 
+def run_async_sniffer():
+    sniffer = AsyncSniffer(filter="tcp port 25565", prn=process_packet, store=False)
+    sniffer.start()
+    start_time = time.perf_counter()
+
+    try:
+        print("Running packet sniffer on TCP port 25565...")
+        print("'CTRL + C' to stop at any time.")
+
+        while sniffer.thread.is_alive():
+            time.sleep(0.5)
+            
+    except KeyboardInterrupt:
+        pass
+
+    finally:
+        if sniffer.running:
+            sniffer.stop()
+
+        output_packet_summary(start_time)
+
+        print("\nExiting...")
+
 # Only when using AsyncSniffer()
-def output_packet_summary():
+def output_packet_summary(start_time):
     print(f"\nTotal packet count: {packet_count}")
     
     end_time = time.perf_counter()
@@ -30,24 +51,6 @@ def output_packet_summary():
 
     return None
 
-def run_async_sniffer():
-    sniffer = AsyncSniffer(filter="tcp port 25565", prn=process_packet, store=False)
-    sniffer.start()
-
-    try:
-        print("Running packet sniffer on TCP port 25565...")
-        print("'CTRL + C' to stop at any time.")
-
-        while sniffer.thread.is_alive():
-            time.sleep(0.5)
-    except KeyboardInterrupt:
-        sniffer.stop()
-
-        output_packet_summary()
-
-        print("\nExiting...")
-        sys.exit(0)
-
 def get_packet_count():
     while True:
         try:
@@ -55,8 +58,7 @@ def get_packet_count():
             break
         except ValueError:
             print("Invalid input. Please enter an integer.")
-
-
+    return sniff_count
 
 def main():
     async_option = input("Would you like to sniff asynchronously? (y/n): ").lower()
@@ -68,3 +70,6 @@ def main():
 
         sniff_count = get_packet_count()
         packets = sniff(count = sniff_count, filter="tcp port 25565", prn=process_packet, store=False)
+
+if __name__ == "__main__":
+    main()
