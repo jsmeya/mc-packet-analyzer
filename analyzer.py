@@ -30,26 +30,41 @@ def output_packet_summary():
 
     return None
 
-packets = sniff(filter="tcp port 25565", prn=process_packet, store=False)
+def run_async_sniffer():
+    sniffer = AsyncSniffer(filter="tcp port 25565", prn=process_packet, store=False)
+    sniffer.start()
 
-# ---------------------------------
-# BELOW IS FOR ASYNCHRONOUS SNIFFING
-# ---------------------------------
-'''
-sniffer = AsyncSniffer(filter="tcp port 25565", prn=process_packet, store=False)
-sniffer.start()
+    try:
+        print("Running packet sniffer on TCP port 25565...")
+        print("'CTRL + C' to stop at any time.")
 
-try:
-    print("Running packet sniffer on TCP port 25565...")
-    print("'CTRL + C' to stop at any time.")
+        while sniffer.thread.is_alive():
+            time.sleep(0.5)
+    except KeyboardInterrupt:
+        sniffer.stop()
 
-    while sniffer.thread.is_alive():
-        time.sleep(0.5)
-except KeyboardInterrupt:
-    sniffer.stop()
+        output_packet_summary()
 
-    output_packet_summary()
+        print("\nExiting...")
+        sys.exit(0)
 
-    print("\nExiting...")
-    sys.exit(0)
-'''
+def get_packet_count():
+    while True:
+        try:
+            sniff_count = int(input("Enter the amount of packets to capture: "))
+            break
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
+
+
+
+def main():
+    async_option = input("Would you like to sniff asynchronously? (y/n): ").lower()
+
+    if async_option == "y":
+        run_async_sniffer()
+
+    elif async_option == "n":
+
+        sniff_count = get_packet_count()
+        packets = sniff(count = sniff_count, filter="tcp port 25565", prn=process_packet, store=False)
